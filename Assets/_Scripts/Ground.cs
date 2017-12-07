@@ -11,13 +11,13 @@ public class Ground : MonoBehaviour
 
     public static float TileWidth;      // 地块宽
     public static float TileHeight;     // 地块高
+    public static bool _touchEnabled = true;     // 是否开启触摸
 
     private int _row = 6;
     private int _col = 6;
     private Unit _currentUnit;      // 当前物体
     private bool _isTouchBegan;     // 开始点击
     private bool _isCanceled;       // 取消
-    private bool _touchEnabled;     // 是否开启触摸
 
     // 假设先初始化7个点
     private const int _spawnNum = 7;
@@ -98,6 +98,8 @@ public class Ground : MonoBehaviour
     // 玩家手指按下操作
     private void OnTouchBegan(GameObject go, PointerEventData eventData)
     {
+        if (!_touchEnabled) { return; }
+
         _isTouchBegan = true;
 
         Tile tile = go.GetComponent<Tile>();
@@ -151,26 +153,29 @@ public class Ground : MonoBehaviour
     // 玩家手指抬起
     private void OnTouchEnded(GameObject go, PointerEventData eventData)
     {
-        _isTouchBegan = false;
-        if (_isCanceled)
+        if (_isTouchBegan)
         {
-            return;
-        }
+            _isTouchBegan = false;
+            if (_isCanceled)
+            {
+                return;
+            }
 
-        Tile tile = go.GetComponent<Tile>();
-        GF.MyPrint("OnTouchEnded: " + tile.name);
-        // 如果是空地，放置当前物体
-        // 如果不是空地，检测是否可以移除物体
-        if (tile.Unit == _currentUnit || tile.IsEmpty())
-        {
-            PlaceUnit();
+            Tile tile = go.GetComponent<Tile>();
+            GF.MyPrint("OnTouchEnded: " + tile.name);
+            // 如果是空地，放置当前物体
+            // 如果不是空地，检测是否可以移除物体
+            if (tile.Unit == _currentUnit || tile.IsEmpty())
+            {
+                PlaceUnit();
 
-            // 产生物体
-            DOVirtual.DelayedCall(0.1f, GenerateUnit);
-        }
-        else
-        {
-            EraseUnit(tile);
+                // 产生物体
+                DOVirtual.DelayedCall(0.1f, GenerateUnit);
+            }
+            else
+            {
+                EraseUnit(tile);
+            }
         }
     }
 
@@ -189,6 +194,7 @@ public class Ground : MonoBehaviour
     // 合体
     private void DoCombination()
     {
+        _touchEnabled = false;
         Vector2 des = _currentUnit.transform.position;
         foreach (var unit in _combineUnitList)
         {
@@ -204,6 +210,7 @@ public class Ground : MonoBehaviour
     // 合体完成
     private void FinishCombination()
     {
+        _touchEnabled = true;
         _combineUnitList.Clear();
     }
 

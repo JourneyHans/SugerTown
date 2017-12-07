@@ -1,13 +1,11 @@
 ﻿<Properties StartupConfiguration="{BB56332C-D4DF-399D-AE7B-795A15E3EC7C}|单元测试">
   <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/_Scripts/Ground.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/_Scripts/GlobalFunction.cs">
     <Files>
-      <File FileName="Assets/_Scripts/Ground.cs" Line="77" Column="10" />
-      <File FileName="Assets/_Scripts/GameMain.cs" Line="13" Column="15" />
-      <File FileName="Assets/_Scripts/GlobalValue.cs" Line="14" Column="37" />
-      <File FileName="Assets/_Scripts/GlobalFunction.cs" Line="20" Column="10" />
-      <File FileName="Assets/_Scripts/Unit.cs" Line="55" Column="27" />
+      <File FileName="Assets/_Scripts/Ground.cs" Line="240" Column="14" />
+      <File FileName="Assets/_Scripts/Unit.cs" Line="107" Column="31" />
       <File FileName="Assets/_Scripts/Tile.cs" Line="25" Column="6" />
+      <File FileName="Assets/_Scripts/GlobalFunction.cs" Line="8" Column="40" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.ItemProperties.SugerTown PreferredExecutionTarget="Unity.Editor" />

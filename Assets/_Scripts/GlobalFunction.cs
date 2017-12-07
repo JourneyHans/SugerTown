@@ -5,7 +5,7 @@ using UnityEngine;
 public static class GF
 {
     // 打印控制
-    public static bool enableLog = false;
+    public static bool enableLog = true;
     public static void MyPrint(object message)
     {
         if (!enableLog) return;
