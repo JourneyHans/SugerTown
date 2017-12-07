@@ -9,10 +9,11 @@ public class Ground : MonoBehaviour
     public Transform tilePrefab;       // 地块
     public Transform unitPrefab;       // 物体
 
+    public static float TileWidth;      // 地块宽
+    public static float TileHeight;     // 地块高
+
     private int _row = 6;
     private int _col = 6;
-    private float _tileWidth;
-    private float _tileHeight;
     private Unit _currentUnit;      // 当前物体
     private bool _isTouchBegan;     // 开始点击
     private bool _isCanceled;       // 取消
@@ -32,8 +33,8 @@ public class Ground : MonoBehaviour
 
     private void Awake()
     {
-        _tileWidth = tilePrefab.GetComponent<SpriteRenderer>().bounds.size.x;
-        _tileHeight = tilePrefab.GetComponent<SpriteRenderer>().bounds.size.y;
+        TileWidth = tilePrefab.GetComponent<SpriteRenderer>().bounds.size.x;
+        TileHeight = tilePrefab.GetComponent<SpriteRenderer>().bounds.size.y;
     }
 
     private void Start()
@@ -45,7 +46,7 @@ public class Ground : MonoBehaviour
             {
                 Transform tileTr = Object.Instantiate(tilePrefab);
                 tileTr.SetParent(transform);
-                tileTr.localPosition = new Vector3(r * _tileWidth, c * _tileHeight);
+                tileTr.localPosition = new Vector3(r * TileWidth, c * TileHeight);
                 tileTr.name = "Tile_" + (c * _col + r + 1);
                 Tile tile = tileTr.GetComponent<Tile>();
                 tile.SetPosition(r, c);
