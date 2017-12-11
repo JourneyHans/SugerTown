@@ -171,9 +171,6 @@ public class Ground : MonoBehaviour
             if (tile.Unit == _currentUnit || tile.IsEmpty())
             {
                 PlaceUnit();
-
-                // 产生物体
-                DOVirtual.DelayedCall(0.1f, GenerateUnit);
             }
             else
             {
@@ -191,6 +188,11 @@ public class Ground : MonoBehaviour
         {
             // 合体！
             DoCombination();
+        }
+        else
+        {
+            // 未合体，产生下一个物体
+            GenerateUnit();
         }
     }
 
@@ -218,6 +220,9 @@ public class Ground : MonoBehaviour
 
         // Current升级
         _currentUnit.SetData(_currentUnit.NextLevel, _currentUnit.X, _currentUnit.Y);
+
+        // 产生下一个物体
+        GenerateUnit();
     }
 
     // 点击地块
