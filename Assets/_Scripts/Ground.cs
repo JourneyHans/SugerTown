@@ -28,6 +28,9 @@ public class Ground : MonoBehaviour
     // 物体列表
     private List<Unit> _unitList = new List<Unit>();
 
+    // 单个合并物体的列表
+    private List<Unit> _singleCombineUnitList = new List<Unit>();
+
     // 当前合并的物体列表
     private List<Unit> _combineUnitList = new List<Unit>();
 
@@ -210,8 +213,11 @@ public class Ground : MonoBehaviour
     // 合体完成
     private void FinishCombination()
     {
-        _touchEnabled = true;
-        _combineUnitList.Clear();
+        _combineUnitList.Clear();       // 清空合体列表
+        _touchEnabled = true;           // 开启触摸
+
+        // Current升级
+        _currentUnit.SetData(_currentUnit.NextLevel, _currentUnit.X, _currentUnit.Y);
     }
 
     // 点击地块
@@ -231,6 +237,8 @@ public class Ground : MonoBehaviour
         }
         _combineUnitList.Clear();
 
+        // 初始化_currentUnit的NextLevel
+        _currentUnit.NextLevel = _currentUnit.Level;
         // 合并过程
         LinkSurround(tile);
 
@@ -248,9 +256,21 @@ public class Ground : MonoBehaviour
     // 链接可以合并的物体(递归)
     private void LinkSurround(Tile tile)
     {
+        // 清空单次合并列表
+        _singleCombineUnitList.Clear();
+
+        // 开始单次合并
         DoLink(tile);
+
+        // 单次合并如果成功后，继续查找下一等级的物体
+        if (_singleCombineUnitList.Count >= 2)
+        {
+            _currentUnit.NextLevel++;
+            LinkSurround(_currentUnit.Tile);
+        }
     }
 
+    // 单次合并（递归）
     private void DoLink(Tile tile)
     {
         int start_x = tile.X - 1;
@@ -283,15 +303,16 @@ public class Ground : MonoBehaviour
                     GF.MyPrint("(" + x + ", " + y + ") is already added");
                     continue;       // 已加入列表，跳过
                 }
-                if (unit.Level != _currentUnit.Level)
+                if (unit.Level != _currentUnit.NextLevel)
                 {
                     GF.MyPrint("(" + x + ", " + y + ") is not the same level. " + unit.name + " level: " + unit.Level);
                     continue; // 等级不一样，跳过
                 }
                 GF.MyPrint("(" + x + ", " + y + ") will be added");
                 _combineUnitList.Add(unit);
+                _singleCombineUnitList.Add(unit);
                 GF.MyPrint("++++++++ End Link Surround");
-                LinkSurround(surroundTile);
+                DoLink(surroundTile);
             }
         }
     }
