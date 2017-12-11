@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -109,8 +110,8 @@ public class Ground : MonoBehaviour
         if (tile.Unit == _currentUnit || tile.IsEmpty())
         {
             // 如果可以放置物体...
-            CheckLinkSurround(tile);
             _currentUnit.SetParent(tile);
+            CheckLinkSurround(tile);
         }
         else
         {
@@ -128,10 +129,8 @@ public class Ground : MonoBehaviour
             {
                 // 如果可以放置物体...先将“取消”置为false
                 _isCanceled = false;
-                CheckLinkSurround(tile);
-                GF.MyPrint("Now Tile is: " + tile.name);
                 _currentUnit.SetParent(tile);
-                GF.MyPrint("Current Parent is: " + _currentUnit.Tile.name);
+                CheckLinkSurround(tile);
             }
             else
             {
@@ -165,7 +164,6 @@ public class Ground : MonoBehaviour
             }
 
             Tile tile = go.GetComponent<Tile>();
-            GF.MyPrint("OnTouchEnded: " + tile.name);
             // 如果是空地，放置当前物体
             // 如果不是空地，检测是否可以移除物体
             if (tile.Unit == _currentUnit || tile.IsEmpty())
@@ -261,11 +259,14 @@ public class Ground : MonoBehaviour
     // 链接可以合并的物体(递归)
     private void LinkSurround(Tile tile)
     {
+        GF.MyPrint("----------- LinkSurround Began: " + tile.name);
         // 清空单次合并列表
         _singleCombineUnitList.Clear();
 
         // 开始单次合并
         DoLink(tile);
+
+        GF.MyPrint("Single Combine contains: " + _singleCombineUnitList.Count);
 
         // 单次合并如果成功后，继续查找下一等级的物体
         if (_singleCombineUnitList.Count >= 2)
@@ -273,17 +274,22 @@ public class Ground : MonoBehaviour
             _currentUnit.NextLevel++;
             LinkSurround(_currentUnit.Tile);
         }
+        else
+        {
+            GF.MyPrint("Remove unit which there is only one...\t" + _singleCombineUnitList.Count);
+            _combineUnitList = _combineUnitList.Except(_singleCombineUnitList).ToList();
+        }
+        GF.MyPrint("----------- LinkSurround Ended");
     }
 
     // 单次合并（递归）
     private void DoLink(Tile tile)
     {
+        GF.MyPrint("----------- DoLink Began");
         int start_x = tile.X - 1;
         int end_x = tile.X + 1; 
         start_x = start_x < 0 ? tile.X : start_x;
         end_x = end_x > _row - 1 ? tile.X : end_x;
-        GF.MyPrint("++++++++ Begin Link Surround");
-        GF.MyPrint("Origin: (" + tile.X + ", " + tile.Y + ")");
         for (int x = start_x; x <= end_x; x++)
         {
             int offset_y = 1 - Mathf.Abs(x - tile.X);
@@ -295,31 +301,30 @@ public class Ground : MonoBehaviour
             for (int y = start_y; y <= end_y; y++)
             {
                 if (x == tile.X && y == tile.Y) continue;   // 不检测自身
-                GF.MyPrint("Surround : (" + x + ", " + y + ")");
                 Tile surroundTile = GetTile(x, y);
                 if (surroundTile.IsEmpty())
                 {
-                    GF.MyPrint("(" + x + ", " + y + ") is Empty");
+                    GF.MyPrint(surroundTile.name + " is Empty");
                     continue;       // 如果是空的，跳过
                 }
                 Unit unit = surroundTile.Unit;
                 if (CheckIsInCombineList(unit) || unit == _currentUnit)
                 {
-                    GF.MyPrint("(" + x + ", " + y + ") is already added");
+                    GF.MyPrint(unit.name + " is already added");
                     continue;       // 已加入列表，跳过
                 }
                 if (unit.Level != _currentUnit.NextLevel)
                 {
-                    GF.MyPrint("(" + x + ", " + y + ") is not the same level. " + unit.name + " level: " + unit.Level);
+                    GF.MyPrint(unit.name + "\'s level is not match to " + "Current Unit\'s next level " + _currentUnit.NextLevel);
                     continue; // 等级不一样，跳过
                 }
-                GF.MyPrint("(" + x + ", " + y + ") will be added");
+                GF.MyPrint(unit.name + " will be added");
                 _combineUnitList.Add(unit);
                 _singleCombineUnitList.Add(unit);
-                GF.MyPrint("++++++++ End Link Surround");
                 DoLink(surroundTile);
             }
         }
+        GF.MyPrint("----------- DoLink Ended");
     }
 
     // 检测是否已经加入到合成列表
@@ -383,7 +388,7 @@ public class Ground : MonoBehaviour
     {
         if (level == -1)    // 未指定等级，就用随机等级
         {
-            level = Random.Range(1, 4);
+            level = Random.Range(1, 3);
         }
         Transform unitTr = Instantiate(unitPrefab);
         Unit unit = unitTr.GetComponent<Unit>();

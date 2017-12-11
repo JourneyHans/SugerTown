@@ -93,7 +93,7 @@ public class Unit : MonoBehaviour
     // 显示合体信息
     public void ShowCombineInfo()
     {
-        print("Level " + _level + " Unit");
+        //print("Level " + _level + " Unit");
     }
 
     // 准备放置的动作
