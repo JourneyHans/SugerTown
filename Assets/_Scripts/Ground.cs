@@ -158,21 +158,19 @@ public class Ground : MonoBehaviour
     public void CheckLinkSurround(Tile tile)
     {
         // 重置状态、清空合并列表
-        foreach (var unit in _combineUnitList)
-        {
-            unit.ResetState();
-        }
+        ResetCombineList();
         _combineUnitList.Clear();
 
         // 初始化_currentUnit的NextLevel
         _currentUnit.NextLevel = _currentUnit.Level;
         // 合并过程
+        GF.MyPrint("=========== CheckLinkSurround Began: " + tile.name);
         LinkSurround(tile);
+        GF.MyPrint("=========== CheckLinkSurround Ended: " + tile.name);
 
         // 合并完成，检查是否会合并
         if (_combineUnitList.Count >= 2)
         {
-            GF.MyPrint(_combineUnitList.Count);
             foreach (var unit in _combineUnitList)
             {
                 unit.ReadyToCombine(tile.transform.position);
