@@ -12,13 +12,15 @@ public class Ground : MonoBehaviour
 
     public static float TileWidth;      // 地块宽
     public static float TileHeight;     // 地块高
-    public static bool _touchEnabled = true;     // 是否开启触摸
 
     private int _row = 6;
     private int _col = 6;
     private Unit _currentUnit;      // 当前物体
-    private bool _isTouchBegan;     // 开始点击
-    private bool _isCanceled;       // 取消
+    public Unit CurrentUnit
+    {
+        get { return _currentUnit; }
+    }
+    private TouchModel _touchModel; // 点击事件模块
 
     // 假设先初始化7个点
     private const int _spawnNum = 7;
@@ -43,6 +45,7 @@ public class Ground : MonoBehaviour
 
     private void Start()
     {
+        _touchModel = GetComponent<TouchModel>();
         // 初始化地块
         for (int c = 0; c < _col; c++)
         {
@@ -57,10 +60,7 @@ public class Ground : MonoBehaviour
                 _tileList.Add(tile);
 
                 // 注册点击事件
-                EventTriggerListener.Get(tileTr.gameObject).onDown = OnTouchBegan;
-                EventTriggerListener.Get(tileTr.gameObject).onUp = OnTouchEnded;
-                EventTriggerListener.Get(tileTr.gameObject).onEnter = OnMoveEnter;
-                EventTriggerListener.Get(tileTr.gameObject).onExit = OnMoveOut;
+                _touchModel.AddTouchEvent(tileTr.gameObject);
             }
         }
 	}
@@ -99,86 +99,8 @@ public class Ground : MonoBehaviour
         _currentUnit.ReadyToPlace();
     }
 
-    // 玩家手指按下操作
-    private void OnTouchBegan(GameObject go, PointerEventData eventData)
-    {
-        if (!_touchEnabled) { return; }
-
-        _isTouchBegan = true;
-
-        Tile tile = go.GetComponent<Tile>();
-        if (tile.Unit == _currentUnit || tile.IsEmpty())
-        {
-            // 如果可以放置物体...
-            _currentUnit.SetParent(tile);
-            CheckLinkSurround(tile);
-        }
-        else
-        {
-            // 不能放置物体...
-            tile.Unit.ShowCombineInfo();
-        }
-    }
-    // 玩家手指移动入物体中
-    private void OnMoveEnter(GameObject go, PointerEventData eventData)
-    {
-        if (_isTouchBegan)
-        {
-            Tile tile = go.GetComponent<Tile>();
-            if (tile.Unit == _currentUnit || tile.IsEmpty())
-            {
-                // 如果可以放置物体...先将“取消”置为false
-                _isCanceled = false;
-                _currentUnit.SetParent(tile);
-                CheckLinkSurround(tile);
-            }
-            else
-            {
-                // 不能放置物体...
-                tile.Unit.ShowCombineInfo();
-            }
-        }
-    }
-    // 玩家手指移出物体
-    private void OnMoveOut(GameObject go, PointerEventData eventData)
-    {
-        if (_isTouchBegan)
-        {
-            // 每次移出Tile都将“取消”置为True，如果玩家移入另一个物体，将置回false
-            _isCanceled = true;
-            foreach (var unit in _combineUnitList)
-            {
-                unit.ResetState();
-            }
-        }
-    }
-    // 玩家手指抬起
-    private void OnTouchEnded(GameObject go, PointerEventData eventData)
-    {
-        if (_isTouchBegan)
-        {
-            _isTouchBegan = false;
-            if (_isCanceled)
-            {
-                return;
-            }
-
-            Tile tile = go.GetComponent<Tile>();
-            // 如果是空地，放置当前物体
-            // 如果不是空地，检测是否可以移除物体
-            if (tile.Unit == _currentUnit || tile.IsEmpty())
-            {
-                PlaceUnit();
-            }
-            else
-            {
-                EraseUnit(tile);
-            }
-        }
-    }
-
     // 放置物体
-    private void PlaceUnit()
+    public void PlaceUnit()
     {
         _currentUnit.Place();
         _unitList.Add(_currentUnit);
@@ -197,7 +119,8 @@ public class Ground : MonoBehaviour
     // 合体
     private void DoCombination()
     {
-        _touchEnabled = false;
+        //_touchEnabled = false;
+        _touchModel.TouchEnabled = false;   // 禁止触摸
         Vector2 des = _currentUnit.transform.position;
         foreach (var unit in _combineUnitList)
         {
@@ -214,7 +137,8 @@ public class Ground : MonoBehaviour
     private void FinishCombination()
     {
         _combineUnitList.Clear();       // 清空合体列表
-        _touchEnabled = true;           // 开启触摸
+        //_touchEnabled = true;           // 开启触摸
+        _touchModel.TouchEnabled = true;    // 开启触摸
 
         // Current升级
         _currentUnit.SetData(_currentUnit.NextLevel, _currentUnit.X, _currentUnit.Y);
@@ -223,15 +147,15 @@ public class Ground : MonoBehaviour
         GenerateUnit();
     }
 
-    // 点击地块
-    private void EraseUnit(Tile tile)
+    // 移除地块
+    public void EraseUnit(Tile tile)
     {
         // 如果当前物体是消除操作，消除选中地块上的物体
 
     }
 
     // 检测可合并的物体
-    private void CheckLinkSurround(Tile tile)
+    public void CheckLinkSurround(Tile tile)
     {
         // 重置状态、清空合并列表
         foreach (var unit in _combineUnitList)
@@ -345,6 +269,15 @@ public class Ground : MonoBehaviour
     {
         int idx = y * _col + x;
         return _tileList[idx];
+    }
+
+    // 重置 Combine Unit List
+    public void ResetCombineList()
+    {
+        foreach (var unit in _combineUnitList)
+        {
+            unit.ResetState();
+        }
     }
 
     // 检测是否已经满了
