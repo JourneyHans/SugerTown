@@ -111,15 +111,15 @@ public class Ground : MonoBehaviour
         }
         else
         {
-            // 未合体，产生下一个物体
-            GenerateUnit();
+            //// 未合体，产生下一个物体
+            //GenerateUnit();
+            FinishCombination();
         }
     }
 
     // 合体
     private void DoCombination()
     {
-        //_touchEnabled = false;
         _touchModel.TouchEnabled = false;   // 禁止触摸
         Vector2 des = _currentUnit.transform.position;
         foreach (var unit in _combineUnitList)
@@ -137,11 +137,10 @@ public class Ground : MonoBehaviour
     private void FinishCombination()
     {
         _combineUnitList.Clear();       // 清空合体列表
-        //_touchEnabled = true;           // 开启触摸
         _touchModel.TouchEnabled = true;    // 开启触摸
 
         // Current升级
-        _currentUnit.SetData(_currentUnit.NextLevel, _currentUnit.X, _currentUnit.Y);
+        _currentUnit.SetData(_currentUnit.NextLevel/*, _currentUnit.X, _currentUnit.Y*/);
 
         // 产生下一个物体
         GenerateUnit();
@@ -324,7 +323,7 @@ public class Ground : MonoBehaviour
         Transform unitTr = Instantiate(unitPrefab);
         Unit unit = unitTr.GetComponent<Unit>();
         unit.SetParent(tile);
-        unit.SetData(level, tile.X, tile.Y);
+        unit.SetData(level/*, tile.X, tile.Y*/);
         return unit;
     }
 }

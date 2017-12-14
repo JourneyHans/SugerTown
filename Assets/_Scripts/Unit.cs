@@ -28,14 +28,14 @@ public class Unit : MonoBehaviour
     }
 
     // 位置索引
-    private int _xIdx;
+    //private int _xIdx;
     public int X{
-        get { return _xIdx; }
+        get { return _tile.X; }
     }
-    private int _yIdx;
+    //private int _yIdx;
     public int Y
     {
-        get { return _yIdx; }
+        get { return _tile.Y; }
     }
 
     // 获取等级
@@ -78,14 +78,14 @@ public class Unit : MonoBehaviour
     }
 
     // 设置数据
-    public void SetData(int level, int x, int y, int isSpecial = 1)
+    public void SetData(int level, /*int x, int y,*/ int isSpecial = 1)
     {
         _level = level;
-        _xIdx = x;
-        _yIdx = y;
+        //_xIdx = x;
+        //_yIdx = y;
         _isSpecial = isSpecial;
         _value = GlobalValue.ValueByLevel[_level] * _isSpecial;
-        name = "Unit_" + (y * 6 + x + 1);
+        name = "Unit_" + (Y * 6 + X + 1);
 
         GetComponent<SpriteRenderer>().sprite = spriteList[_level - 1];
     }
