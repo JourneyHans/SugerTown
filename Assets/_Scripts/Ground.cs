@@ -1,9 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using DG.Tweening;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class Ground : MonoBehaviour 
 {
@@ -102,7 +100,7 @@ public class Ground : MonoBehaviour
     // 放置物体
     public void PlaceUnit()
     {
-        _currentUnit.Place();
+        _currentUnit.ResetState();
         _unitList.Add(_currentUnit);
         if (_combineUnitList.Count >= 2)
         {
@@ -111,8 +109,7 @@ public class Ground : MonoBehaviour
         }
         else
         {
-            //// 未合体，产生下一个物体
-            //GenerateUnit();
+            // 未合体，直接调用完成合体
             FinishCombination();
         }
     }
@@ -139,8 +136,13 @@ public class Ground : MonoBehaviour
         _combineUnitList.Clear();       // 清空合体列表
         _touchModel.TouchEnabled = true;    // 开启触摸
 
+
+        // 计算分数，分数规则为：
+        // 1. 未合体：得到物体本身的分数
+        // 2. 合体：得到合体过程中每一级物体的分数（包括Special）
+
         // Current升级
-        _currentUnit.SetData(_currentUnit.NextLevel/*, _currentUnit.X, _currentUnit.Y*/);
+        _currentUnit.SetData(_currentUnit.NextLevel);
 
         // 产生下一个物体
         GenerateUnit();
@@ -150,7 +152,7 @@ public class Ground : MonoBehaviour
     public void EraseUnit(Tile tile)
     {
         // 如果当前物体是消除操作，消除选中地块上的物体
-
+        GF.MyPrint("=========== EraseUnit Began: " + tile.name);
     }
 
     // 检测可合并的物体
@@ -323,7 +325,7 @@ public class Ground : MonoBehaviour
         Transform unitTr = Instantiate(unitPrefab);
         Unit unit = unitTr.GetComponent<Unit>();
         unit.SetParent(tile);
-        unit.SetData(level/*, tile.X, tile.Y*/);
+        unit.SetData(level);
         return unit;
     }
 }

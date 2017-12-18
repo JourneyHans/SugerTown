@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SugerTown", "Assembly-CSharp.csproj", "{BB56332C-D4DF-399D-AE7B-795A15E3EC7C}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio for Mac
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SugerTown", "SugerTown.csproj", "{BA4CAABE-33A0-AFDB-F047-D87441B6F292}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,15 +9,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BB56332C-D4DF-399D-AE7B-795A15E3EC7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BB56332C-D4DF-399D-AE7B-795A15E3EC7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BB56332C-D4DF-399D-AE7B-795A15E3EC7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BB56332C-D4DF-399D-AE7B-795A15E3EC7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA4CAABE-33A0-AFDB-F047-D87441B6F292}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA4CAABE-33A0-AFDB-F047-D87441B6F292}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA4CAABE-33A0-AFDB-F047-D87441B6F292}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA4CAABE-33A0-AFDB-F047-D87441B6F292}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Assembly-CSharp.csproj
 	EndGlobalSection
 EndGlobal

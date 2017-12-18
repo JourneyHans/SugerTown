@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{BA4CAABE-33A0-AFDB-F047-D87441B6F292}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>Assembly-CSharp.dll</AssemblyName>
+    <AssemblyName>Assembly-CSharp</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
@@ -258,7 +258,14 @@
     <Compile Include="Assets\_Scripts\GlobalValue.cs" />
     <Compile Include="Assets\_Scripts\Ground.cs" />
     <Compile Include="Assets\_Scripts\MainUI.cs" />
+    <Compile Include="Assets\_Scripts\ScoreManager.cs" />
+    <Compile Include="Assets\_Scripts\TestScripts\Enemy.cs" />
+    <Compile Include="Assets\_Scripts\TestScripts\Humanoid.cs" />
+    <Compile Include="Assets\_Scripts\TestScripts\ListTest.cs" />
+    <Compile Include="Assets\_Scripts\TestScripts\Orc.cs" />
+    <Compile Include="Assets\_Scripts\TestScripts\WarBand.cs" />
     <Compile Include="Assets\_Scripts\Tile.cs" />
+    <Compile Include="Assets\_Scripts\TouchModel.cs" />
     <Compile Include="Assets\_Scripts\Unit.cs" />
   </ItemGroup>
   <ItemGroup>

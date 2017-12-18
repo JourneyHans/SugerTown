@@ -28,20 +28,22 @@ public class Unit : MonoBehaviour
     }
 
     // 位置索引
-    //private int _xIdx;
     public int X{
         get { return _tile.X; }
     }
-    //private int _yIdx;
     public int Y
     {
         get { return _tile.Y; }
     }
 
     // 获取等级
-    public int Level
-    {
+    public int Level {
         get { return _level; }
+    }
+
+    // 获取分数
+    public int Value {
+        get { return _value; }
     }
 
     // 获取即将转换的下一等级
@@ -61,12 +63,6 @@ public class Unit : MonoBehaviour
         tile.Unit = this;
     }
 
-    // 确认放置
-    public void Place()
-    {
-        ResetState();
-    }
-
     // 解除与父节点的关系
     public void DetachParent()
     {
@@ -78,11 +74,9 @@ public class Unit : MonoBehaviour
     }
 
     // 设置数据
-    public void SetData(int level, /*int x, int y,*/ int isSpecial = 1)
+    public void SetData(int level, int isSpecial = 1)
     {
         _level = level;
-        //_xIdx = x;
-        //_yIdx = y;
         _isSpecial = isSpecial;
         _value = GlobalValue.ValueByLevel[_level] * _isSpecial;
         name = "Unit_" + (Y * 6 + X + 1);
