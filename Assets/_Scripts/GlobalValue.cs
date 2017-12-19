@@ -1,17 +1,7 @@
 ﻿static public class GlobalValue
 {
-    public static string[] NameByLevel = new string[]
-    {
-        "Level_1_Unit",
-        "Level_2_Unit",
-        "Level_3_Unit",
-        "Level_4_Unit",
-        "Level_5_Unit",
-        "Level_6_Unit",
-        "Level_7_Unit",
-    };
-
-    public static int[] ValueByLevel = new int[]
+    // 等级对应的分数
+    public static int[] ScoreByLevel = new int[]
     {
         5,
         20,
@@ -21,4 +11,7 @@
         10000,
         40000,
     };
+
+    public static int[] LevelList = { 1, 2, 3, 4 };   // 能够随机出的等级
+    public static float[] ProbabilityList = { 0.8f, 0.1f, 0.08f, 0.02f }; // 各个等级出现的概率
 }

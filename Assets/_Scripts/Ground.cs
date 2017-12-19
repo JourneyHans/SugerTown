@@ -136,13 +136,11 @@ public class Ground : MonoBehaviour
         _combineUnitList.Clear();       // 清空合体列表
         _touchModel.TouchEnabled = true;    // 开启触摸
 
-
-        // 计算分数，分数规则为：
-        // 1. 未合体：得到物体本身的分数
-        // 2. 合体：得到合体过程中每一级物体的分数（包括Special）
-
         // Current升级
-        _currentUnit.SetData(_currentUnit.NextLevel);
+        _currentUnit.SetData(_currentUnit.NextLevel, _currentUnit.Special);
+
+        // 更新分数
+        ScoreManager.Instance.UpdateScore = true;
 
         // 产生下一个物体
         GenerateUnit();
@@ -158,12 +156,15 @@ public class Ground : MonoBehaviour
     // 检测可合并的物体
     public void CheckLinkSurround(Tile tile)
     {
-        // 重置状态、清空合并列表
+        // 重置状态、清空合并列表、清空得分列表
         ResetCombineList();
         _combineUnitList.Clear();
+        ScoreManager.Instance.ClearScoreList();
 
-        // 初始化_currentUnit的NextLevel
+        // 重置_currentUnit的NextLevel和Special
         _currentUnit.NextLevel = _currentUnit.Level;
+        _currentUnit.Special = 1;
+
         // 合并过程
         GF.MyPrint("=========== CheckLinkSurround Began: " + tile.name);
         LinkSurround(tile);
@@ -191,16 +192,32 @@ public class Ground : MonoBehaviour
 
         GF.MyPrint("Single Combine contains: " + _singleCombineUnitList.Count);
 
+        /** 计算分数，分数规则为：
+        /* 1. 未合体：得到物体本身的分数
+        /* 2. 合体：得到合体过程中每一级物体的分数（但不包含初始的物体）*/
+
         // 单次合并如果成功后，继续查找下一等级的物体
         if (_singleCombineUnitList.Count >= 2)
         {
-            _currentUnit.NextLevel++;
+            _currentUnit.NextLevel++;           // 等级提升
+            _currentUnit.Special = (_singleCombineUnitList.Count > 2 ? 2 : 1);// 是否超过3个合体，变为Special物体
+
+            // 将分数加入分数列表准备做分步运算
+            ScoreManager.Instance.AddToScoreList(_currentUnit.Score);
+
+            // 递归检测下一等级的Unit是否会合体
             LinkSurround(_currentUnit.Tile);
         }
         else
         {
             GF.MyPrint("Remove unit which there is only one...\t" + _singleCombineUnitList.Count);
             _combineUnitList = _combineUnitList.Except(_singleCombineUnitList).ToList();
+
+            // 没有升过级，得分为本身的分数
+            if (_currentUnit.NextLevel == _currentUnit.Level)
+            {
+                ScoreManager.Instance.AddToScoreList(_currentUnit.Score);
+            }
         }
         GF.MyPrint("----------- LinkSurround Ended");
     }
@@ -244,6 +261,7 @@ public class Ground : MonoBehaviour
                 GF.MyPrint(unit.name + " will be added");
                 _combineUnitList.Add(unit);
                 _singleCombineUnitList.Add(unit);
+                // 递归检测下一个邻位
                 DoLink(surroundTile);
             }
         }
@@ -320,7 +338,7 @@ public class Ground : MonoBehaviour
     {
         if (level == -1)    // 未指定等级，就用随机等级
         {
-            level = Random.Range(1, 3);
+            level = RandomController.Range(GlobalValue.LevelList, GlobalValue.ProbabilityList);
         }
         Transform unitTr = Instantiate(unitPrefab);
         Unit unit = unitTr.GetComponent<Unit>();

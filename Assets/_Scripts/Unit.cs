@@ -9,7 +9,7 @@ public class Unit : MonoBehaviour
     [SerializeField]
     private int _level;
     [SerializeField]
-    private int _value;
+    private int _score;
     [SerializeField]
     private string _name;
     [SerializeField]
@@ -42,8 +42,13 @@ public class Unit : MonoBehaviour
     }
 
     // 获取分数
-    public int Value {
-        get { return _value; }
+    public int Score 
+    {
+        get 
+        { 
+            _score = GlobalValue.ScoreByLevel[_nextLevel - 1] * _isSpecial;
+            return _score;
+        }
     }
 
     // 获取即将转换的下一等级
@@ -51,6 +56,13 @@ public class Unit : MonoBehaviour
     {
         get { return _nextLevel; }
         set { _nextLevel = value; }
+    }
+
+    // 获取是否为Special物体
+    public int Special
+    {
+        get { return _isSpecial; }
+        set { _isSpecial = value; }
     }
 
     // 设置父节点，并建立关系
@@ -78,7 +90,6 @@ public class Unit : MonoBehaviour
     {
         _level = level;
         _isSpecial = isSpecial;
-        _value = GlobalValue.ValueByLevel[_level] * _isSpecial;
         name = "Unit_" + (Y * 6 + X + 1);
 
         GetComponent<SpriteRenderer>().sprite = spriteList[_level - 1];

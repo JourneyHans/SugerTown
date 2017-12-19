@@ -258,11 +258,13 @@
     <Compile Include="Assets\_Scripts\GlobalValue.cs" />
     <Compile Include="Assets\_Scripts\Ground.cs" />
     <Compile Include="Assets\_Scripts\MainUI.cs" />
+    <Compile Include="Assets\_Scripts\RandomController.cs" />
     <Compile Include="Assets\_Scripts\ScoreManager.cs" />
     <Compile Include="Assets\_Scripts\TestScripts\Enemy.cs" />
     <Compile Include="Assets\_Scripts\TestScripts\Humanoid.cs" />
     <Compile Include="Assets\_Scripts\TestScripts\ListTest.cs" />
     <Compile Include="Assets\_Scripts\TestScripts\Orc.cs" />
+    <Compile Include="Assets\_Scripts\TestScripts\RandomTest.cs" />
     <Compile Include="Assets\_Scripts\TestScripts\WarBand.cs" />
     <Compile Include="Assets\_Scripts\Tile.cs" />
     <Compile Include="Assets\_Scripts\TouchModel.cs" />
