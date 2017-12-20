@@ -7,20 +7,20 @@ public class Unit : MonoBehaviour
 {
     public Sprite[] spriteList;
     [SerializeField]
-    private int _level;
+    protected int _level;
     [SerializeField]
-    private int _score;
+    protected int _score;
     [SerializeField]
-    private string _name;
+    protected string _name;
     [SerializeField]
-    private int _isSpecial;     // 1为普通，2为高级（分数翻倍）
+    protected int _isSpecial;     // 1为普通，2为高级（分数翻倍）
 
-    private Tweener _doTween;   // 当前的Action
-    private Vector2 _originPos; // 保存初始位置(世界坐标)
-    private int _nextLevel;     // 即将转换的下一等级
+    protected Tweener _doTween;   // 当前的Action
+    protected Vector2 _originPos; // 保存初始位置(世界坐标)
+    protected int _nextLevel;     // 即将转换的下一等级
 
     // 生长的土地（父节点）
-    private Tile _tile;
+    protected Tile _tile;
     public Tile Tile
     {
         get { return _tile; }
@@ -28,7 +28,8 @@ public class Unit : MonoBehaviour
     }
 
     // 位置索引
-    public int X{
+    public int X
+    {
         get { return _tile.X; }
     }
     public int Y
@@ -37,8 +38,15 @@ public class Unit : MonoBehaviour
     }
 
     // 获取等级
-    public int Level {
+    public int Level 
+    {
         get { return _level; }
+    }
+
+    // 获取类型
+    public System.Type Type
+    {
+        get { return GetType(); }
     }
 
     // 获取分数
@@ -46,7 +54,7 @@ public class Unit : MonoBehaviour
     {
         get 
         { 
-            _score = GlobalValue.ScoreByLevel[_nextLevel - 1] * _isSpecial;
+            _score = GlobalValue.NormalScoreByLevel[_nextLevel - 1] * _isSpecial;
             return _score;
         }
     }

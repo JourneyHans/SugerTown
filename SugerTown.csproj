@@ -258,6 +258,7 @@
     <Compile Include="Assets\_Scripts\GlobalValue.cs" />
     <Compile Include="Assets\_Scripts\Ground.cs" />
     <Compile Include="Assets\_Scripts\MainUI.cs" />
+    <Compile Include="Assets\_Scripts\MoveUnit.cs" />
     <Compile Include="Assets\_Scripts\RandomController.cs" />
     <Compile Include="Assets\_Scripts\ScoreManager.cs" />
     <Compile Include="Assets\_Scripts\TestScripts\Enemy.cs" />

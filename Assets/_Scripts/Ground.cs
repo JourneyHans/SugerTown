@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class Ground : MonoBehaviour 
 {
-    public Transform tilePrefab;       // 地块
-    public Transform unitPrefab;       // 物体
+    public Transform tilePrefab;        // 地块
+    public Transform unitPrefab;        // 物体
+    public Transform moveUnitPrefab;    // 可移动物体
 
     public static float TileWidth;      // 地块宽
     public static float TileHeight;     // 地块高
@@ -121,10 +122,11 @@ public class Ground : MonoBehaviour
         Vector2 des = _currentUnit.transform.position;
         foreach (var unit in _combineUnitList)
         {
+            // 开始合并的动画
             unit.StartCombine(des);
             _unitList.Remove(unit);
             if (unit == _combineUnitList[_combineUnitList.Count - 1])
-            {
+            {   // 完成合并的回调
                 unit.StartCombine(des, FinishCombination);
             }
         }
@@ -255,8 +257,19 @@ public class Ground : MonoBehaviour
                 }
                 if (unit.Level != _currentUnit.NextLevel)
                 {
-                    GF.MyPrint(unit.name + "\'s level is not match to " + "Current Unit\'s next level " + _currentUnit.NextLevel);
-                    continue; // 等级不一样，跳过
+                    GF.MyPrint(string.Format("Level not match: {0}/Current : {1}/{2}", unit.name, unit.Level, _currentUnit.NextLevel));
+                    continue;   // 等级不一样，跳过
+                }
+                if (unit.Type != _currentUnit.Type)
+                {
+                    GF.MyPrint(string.Format("Type not match: {0}/Current : {1}/{2}", unit.name, unit.Type, _currentUnit.Type));
+                    continue;   // 类型不一样，跳过
+                }
+                MoveUnit moveUnit = unit.GetComponent<MoveUnit>();
+                if (moveUnit != null && moveUnit.IsAlive)
+                {
+                    GF.MyPrint(string.Format("{0} is still alive", moveUnit.name));
+                    continue;   // 移动物体还活着
                 }
                 GF.MyPrint(unit.name + " will be added");
                 _combineUnitList.Add(unit);
@@ -336,14 +349,45 @@ public class Ground : MonoBehaviour
     // 创建Unit
     private Unit CreateUnit(Tile tile, int level = -1)
     {
+        int type = RandomController.Range(GlobalValue.UnitClassList, GlobalValue.UnitSpawnProbList);
+        Unit unit = null;
+        switch (type)
+        {
+            case 1:
+                unit = CreateNormalUnit(tile, level);
+                break;
+            case 2:
+                unit = CreateMovableUnit(tile);
+                break;
+            default:
+                print("Wrong type: " + type);
+                break;
+        }
+        return unit;
+    }
+
+    // 创建普通Unit
+    private Unit CreateNormalUnit(Tile tile, int level = -1)
+    {
         if (level == -1)    // 未指定等级，就用随机等级
         {
-            level = RandomController.Range(GlobalValue.LevelList, GlobalValue.ProbabilityList);
+            level = RandomController.Range(GlobalValue.NormalLevelList, GlobalValue.NormalProbList);
         }
         Transform unitTr = Instantiate(unitPrefab);
         Unit unit = unitTr.GetComponent<Unit>();
         unit.SetParent(tile);
         unit.SetData(level);
         return unit;
+    }
+
+    // 创建移动Unit
+    private MoveUnit CreateMovableUnit(Tile tile)
+    {
+        Transform moveUnitTr = Instantiate(moveUnitPrefab);
+        MoveUnit moveUnit = moveUnitTr.GetComponent<MoveUnit>();
+        moveUnit.SetParent(tile);
+        moveUnit.SetData(1);
+        moveUnit.SetAlive(true);
+        return moveUnit;
     }
 }
