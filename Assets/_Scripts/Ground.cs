@@ -146,6 +146,20 @@ public class Ground : MonoBehaviour
 
         // 产生下一个物体
         GenerateUnit();
+
+        // 检测移动物体是否移动
+        foreach (var unit in _unitList)
+        {
+            MoveUnit moveUnit = unit.GetComponent<MoveUnit>();
+            if (moveUnit != null && moveUnit.IsAlive)
+            {
+                bool isSurrounded = WanderAround(moveUnit);
+                if (isSurrounded)
+                {
+                    moveUnit.SetAlive(false);
+                }
+            }
+        }
     }
 
     // 移除地块
@@ -153,6 +167,50 @@ public class Ground : MonoBehaviour
     {
         // 如果当前物体是消除操作，消除选中地块上的物体
         GF.MyPrint("=========== EraseUnit Began: " + tile.name);
+    }
+
+    // 移动物体
+    private bool WanderAround(MoveUnit moveUnit)
+    {
+        List<Tile> emptyList = new List<Tile>();
+        bool isSurrounded = true;
+        Tile currentTile = moveUnit.Tile;
+
+        // 检测上下左右是否有空位可以移动
+        int start_x = currentTile.X - 1;
+        int end_x = currentTile.X + 1;
+        start_x = start_x < 0 ? currentTile.X : start_x;
+        end_x = end_x > _row - 1 ? currentTile.X : end_x;
+        for (int x = start_x; x <= end_x; x++)
+        {
+            int offset_y = 1 - Mathf.Abs(x - currentTile.X);
+            int start_y = currentTile.Y - offset_y;
+            int end_y = currentTile.Y + offset_y;
+            start_y = start_y < 0 ? currentTile.Y : start_y;
+            end_y = end_y > _col - 1 ? currentTile.Y : end_y;
+
+            for (int y = start_y; y <= end_y; y++)
+            {
+                if (x == currentTile.X && y == currentTile.Y) continue;   // 不检测自身
+                Tile surroundTile = GetTile(x, y);
+                if (surroundTile.IsEmpty())
+                {
+                    // 如果有一个是空的，那么MoveUnit就不会被围死
+                    isSurrounded = false;
+                    emptyList.Add(surroundTile);
+                }
+            }
+        }
+
+        // 如果有空位，随机选一个作为移动的目标
+        if (emptyList.Count > 0)
+        {
+            int pickOne = Random.Range(0, emptyList.Count);
+            Tile target = emptyList[pickOne];
+            moveUnit.MoveToTile(target);
+        }
+
+        return isSurrounded;
     }
 
     // 检测可合并的物体
@@ -172,7 +230,7 @@ public class Ground : MonoBehaviour
         LinkSurround(tile);
         GF.MyPrint("=========== CheckLinkSurround Ended: " + tile.name);
 
-        // 合并完成，检查是否会合并
+        // 连接完成，检查是否会合并
         if (_combineUnitList.Count >= 2)
         {
             foreach (var unit in _combineUnitList)

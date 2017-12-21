@@ -26,7 +26,15 @@ public class MoveUnit : Unit
     // 设置是否存活
     public void SetAlive(bool isAlive)
     {
-        GetComponent<SpriteRenderer>().sprite = isAlive ? aliveSp : spriteList[0];
+        _isAlive = isAlive;
+        if (isAlive)
+        {
+            GetComponent<SpriteRenderer>().sprite = aliveSp;
+        }
+        else
+        {
+            SetData(1);
+        }
     }
 
     // 移动
