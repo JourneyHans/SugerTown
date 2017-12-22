@@ -8,17 +8,14 @@ public class MoveUnit : Unit
     public Sprite aliveSp;
 
     // 是否存活
-    protected bool _isAlive = true;
-    public bool IsAlive
-    {
-        get { return _isAlive; }
-    }
+    public bool IsAlive { get; set; }
+
     // 获取分数
     public new int Score
     {
         get
         {
-            _score = GlobalValue.MoveScoreByLevel[_nextLevel - 1] * _isSpecial;
+            _score = GlobalValue.MoveScoreByLevel[NextLevel - 1] * Special;
             return _score;
         }
     }
@@ -26,7 +23,7 @@ public class MoveUnit : Unit
     // 设置是否存活
     public void SetAlive(bool isAlive)
     {
-        _isAlive = isAlive;
+        IsAlive = isAlive;
         if (isAlive)
         {
             GetComponent<SpriteRenderer>().sprite = aliveSp;

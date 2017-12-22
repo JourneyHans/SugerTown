@@ -6,15 +6,10 @@ using UnityEngine.EventSystems;
 public class TouchModel : MonoBehaviour 
 {
     private Ground ground;
-
-    private bool _touchEnabled = true;     // 是否开启触摸
-    public bool TouchEnabled
-    {
-        get { return _touchEnabled; }
-        set { _touchEnabled = value; }
-    }
     private bool _isTouchBegan;     // 开始点击
     private bool _isCanceled;       // 取消
+
+    public bool TouchEnabled { get; set; }  // 是否开启触摸
 
 	void Start () 
     {
@@ -32,7 +27,7 @@ public class TouchModel : MonoBehaviour
     // 玩家手指按下操作
     private void OnTouchBegan(GameObject go, PointerEventData eventData)
     {
-        if (!_touchEnabled) { return; }
+        if (!TouchEnabled) { return; }
 
         _isTouchBegan = true;
 

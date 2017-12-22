@@ -14,11 +14,8 @@ public class Ground : MonoBehaviour
 
     private int _row = 6;
     private int _col = 6;
-    private Unit _currentUnit;      // 当前物体
-    public Unit CurrentUnit
-    {
-        get { return _currentUnit; }
-    }
+
+    public Unit CurrentUnit { get; set; }   // 当前物体
     private TouchModel _touchModel; // 点击事件模块
 
     // 假设先初始化7个点
@@ -79,7 +76,7 @@ public class Ground : MonoBehaviour
             }
         }
 
-        _currentUnit = _unitList[_unitList.Count - 1];
+        CurrentUnit = _unitList[_unitList.Count - 1];
     }
 
     // 生成物体
@@ -92,17 +89,17 @@ public class Ground : MonoBehaviour
             return;
         }
 
-        Tile nextTile = CheckSurround(_currentUnit.Tile);
+        Tile nextTile = CheckSurround(CurrentUnit.Tile);
         Unit unit = CreateUnit(nextTile);
-        _currentUnit = unit;
-        _currentUnit.ReadyToPlace();
+        CurrentUnit = unit;
+        CurrentUnit.ReadyToPlace();
     }
 
     // 放置物体
     public void PlaceUnit()
     {
-        _currentUnit.ResetState();
-        _unitList.Add(_currentUnit);
+        CurrentUnit.ResetState();
+        _unitList.Add(CurrentUnit);
         if (_combineUnitList.Count >= 2)
         {
             // 合体！
@@ -119,7 +116,7 @@ public class Ground : MonoBehaviour
     private void DoCombination()
     {
         _touchModel.TouchEnabled = false;   // 禁止触摸
-        Vector2 des = _currentUnit.transform.position;
+        Vector2 des = CurrentUnit.transform.position;
         foreach (var unit in _combineUnitList)
         {
             // 开始合并的动画
@@ -139,7 +136,7 @@ public class Ground : MonoBehaviour
         _touchModel.TouchEnabled = true;    // 开启触摸
 
         // Current升级
-        _currentUnit.SetData(_currentUnit.NextLevel, _currentUnit.Special);
+        CurrentUnit.SetData(CurrentUnit.NextLevel, CurrentUnit.Special);
 
         // 更新分数
         ScoreManager.Instance.UpdateScore = true;
@@ -221,9 +218,9 @@ public class Ground : MonoBehaviour
         _combineUnitList.Clear();
         ScoreManager.Instance.ClearScoreList();
 
-        // 重置_currentUnit的NextLevel和Special
-        _currentUnit.NextLevel = _currentUnit.Level;
-        _currentUnit.Special = 1;
+        // 重置CurrentUnit的NextLevel和Special
+        CurrentUnit.NextLevel = CurrentUnit.Level;
+        CurrentUnit.Special = 1;
 
         // 合并过程
         GF.MyPrint("=========== CheckLinkSurround Began: " + tile.name);
@@ -259,14 +256,14 @@ public class Ground : MonoBehaviour
         // 单次合并如果成功后，继续查找下一等级的物体
         if (_singleCombineUnitList.Count >= 2)
         {
-            _currentUnit.NextLevel++;           // 等级提升
-            _currentUnit.Special = (_singleCombineUnitList.Count > 2 ? 2 : 1);// 是否超过3个合体，变为Special物体
+            CurrentUnit.NextLevel++;           // 等级提升
+            CurrentUnit.Special = (_singleCombineUnitList.Count > 2 ? 2 : 1);// 是否超过3个合体，变为Special物体
 
             // 将分数加入分数列表准备做分步运算
-            ScoreManager.Instance.AddToScoreList(_currentUnit.Score);
+            ScoreManager.Instance.AddToScoreList(CurrentUnit.Score);
 
             // 递归检测下一等级的Unit是否会合体
-            LinkSurround(_currentUnit.Tile);
+            LinkSurround(CurrentUnit.Tile);
         }
         else
         {
@@ -274,9 +271,9 @@ public class Ground : MonoBehaviour
             _combineUnitList = _combineUnitList.Except(_singleCombineUnitList).ToList();
 
             // 没有升过级，得分为本身的分数
-            if (_currentUnit.NextLevel == _currentUnit.Level)
+            if (CurrentUnit.NextLevel == CurrentUnit.Level)
             {
-                ScoreManager.Instance.AddToScoreList(_currentUnit.Score);
+                ScoreManager.Instance.AddToScoreList(CurrentUnit.Score);
             }
         }
         GF.MyPrint("----------- LinkSurround Ended");
@@ -308,19 +305,19 @@ public class Ground : MonoBehaviour
                     continue;       // 如果是空的，跳过
                 }
                 Unit unit = surroundTile.Unit;
-                if (CheckIsInCombineList(unit) || unit == _currentUnit)
+                if (CheckIsInCombineList(unit) || unit == CurrentUnit)
                 {
                     GF.MyPrint(unit.name + " is already added");
                     continue;       // 已加入列表，跳过
                 }
-                if (unit.Level != _currentUnit.NextLevel)
+                if (unit.Level != CurrentUnit.NextLevel)
                 {
-                    GF.MyPrint(string.Format("Level not match: {0}/Current : {1}/{2}", unit.name, unit.Level, _currentUnit.NextLevel));
+                    GF.MyPrint(string.Format("Level not match: {0}/Current : {1}/{2}", unit.name, unit.Level, CurrentUnit.NextLevel));
                     continue;   // 等级不一样，跳过
                 }
-                if (unit.Type != _currentUnit.Type)
+                if (unit.Type != CurrentUnit.Type)
                 {
-                    GF.MyPrint(string.Format("Type not match: {0}/Current : {1}/{2}", unit.name, unit.Type, _currentUnit.Type));
+                    GF.MyPrint(string.Format("Type not match: {0}/Current : {1}/{2}", unit.name, unit.Type, CurrentUnit.Type));
                     continue;   // 类型不一样，跳过
                 }
                 MoveUnit moveUnit = unit.GetComponent<MoveUnit>();

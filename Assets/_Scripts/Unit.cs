@@ -7,40 +7,31 @@ public class Unit : MonoBehaviour
 {
     public Sprite[] spriteList;
     [SerializeField]
-    protected int _level;
-    [SerializeField]
     protected int _score;
-    [SerializeField]
-    protected string _name;
-    [SerializeField]
-    protected int _isSpecial;     // 1为普通，2为高级（分数翻倍）
 
     protected Tweener _doTween;   // 当前的Action
     protected Vector2 _originPos; // 保存初始位置(世界坐标)
-    protected int _nextLevel;     // 即将转换的下一等级
+
+    // 等级
+    public int Level { get; set; }
+
+    // 即将转换的下一等级
+    public int NextLevel { get; set; }
+
+    // 是否为Special物体，1为普通，2为特殊，分数翻倍
+    public int Special { set; get; }
 
     // 生长的土地（父节点）
-    protected Tile _tile;
-    public Tile Tile
-    {
-        get { return _tile; }
-        set { _tile = value; }
-    }
+    public Tile Tile { get; set; }
 
     // 位置索引
     public int X
     {
-        get { return _tile.X; }
+        get { return Tile.X; }
     }
     public int Y
     {
-        get { return _tile.Y; }
-    }
-
-    // 获取等级
-    public int Level 
-    {
-        get { return _level; }
+        get { return Tile.Y; }
     }
 
     // 获取类型
@@ -54,30 +45,16 @@ public class Unit : MonoBehaviour
     {
         get 
         { 
-            _score = GlobalValue.NormalScoreByLevel[_nextLevel - 1] * _isSpecial;
+            _score = GlobalValue.NormalScoreByLevel[NextLevel - 1] * Special;
             return _score;
         }
-    }
-
-    // 获取即将转换的下一等级
-    public int NextLevel
-    {
-        get { return _nextLevel; }
-        set { _nextLevel = value; }
-    }
-
-    // 获取是否为Special物体
-    public int Special
-    {
-        get { return _isSpecial; }
-        set { _isSpecial = value; }
     }
 
     // 设置父节点，并建立关系
     public void SetParent(Tile tile)
     {
         DetachParent();
-        _tile = tile;
+        Tile = tile;
         transform.SetParent(tile.transform, false);
         _originPos = transform.position;
         tile.Unit = this;
@@ -86,21 +63,21 @@ public class Unit : MonoBehaviour
     // 解除与父节点的关系
     public void DetachParent()
     {
-        if (_tile)
+        if (Tile)
         {
-            _tile.Unit = null;
-            _tile = null;
+            Tile.Unit = null;
+            Tile = null;
         }
     }
 
     // 设置数据
     public void SetData(int level, int isSpecial = 1)
     {
-        _level = level;
-        _isSpecial = isSpecial;
+        Level = level;
+        Special = isSpecial;
         name = "Unit_" + (Y * 6 + X + 1);
 
-        GetComponent<SpriteRenderer>().sprite = spriteList[_level - 1];
+        GetComponent<SpriteRenderer>().sprite = spriteList[Level - 1];
     }
 
     // 显示合体信息
