@@ -10,6 +10,11 @@ public class MoveUnit : Unit
     // 是否存活
     public bool IsAlive { get; set; }
 
+    private void Awake()
+    {
+        SetAlive(true);
+    }
+
     // 获取分数
     public new int Score
     {

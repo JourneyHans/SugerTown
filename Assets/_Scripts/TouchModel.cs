@@ -13,6 +13,7 @@ public class TouchModel : MonoBehaviour
 
 	void Start () 
     {
+        TouchEnabled = true;
         ground = GetComponent<Ground>();
 	}
 
