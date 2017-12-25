@@ -252,24 +252,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\_Scripts\EventTriggerListener.cs" />
-    <Compile Include="Assets\_Scripts\GameMain.cs" />
-    <Compile Include="Assets\_Scripts\GlobalFunction.cs" />
-    <Compile Include="Assets\_Scripts\GlobalValue.cs" />
-    <Compile Include="Assets\_Scripts\Ground.cs" />
-    <Compile Include="Assets\_Scripts\MainUI.cs" />
-    <Compile Include="Assets\_Scripts\MoveUnit.cs" />
-    <Compile Include="Assets\_Scripts\RandomController.cs" />
-    <Compile Include="Assets\_Scripts\ScoreManager.cs" />
-    <Compile Include="Assets\_Scripts\TestScripts\Enemy.cs" />
-    <Compile Include="Assets\_Scripts\TestScripts\Humanoid.cs" />
-    <Compile Include="Assets\_Scripts\TestScripts\ListTest.cs" />
-    <Compile Include="Assets\_Scripts\TestScripts\Orc.cs" />
-    <Compile Include="Assets\_Scripts\TestScripts\RandomTest.cs" />
-    <Compile Include="Assets\_Scripts\TestScripts\WarBand.cs" />
-    <Compile Include="Assets\_Scripts\Tile.cs" />
-    <Compile Include="Assets\_Scripts\TouchModel.cs" />
-    <Compile Include="Assets\_Scripts\Unit.cs" />
+    <Compile Include="Assets\Scripts\EventTriggerListener.cs" />
+    <Compile Include="Assets\Scripts\GameMain.cs" />
+    <Compile Include="Assets\Scripts\Global\GlobalFunction.cs" />
+    <Compile Include="Assets\Scripts\Global\GlobalValue.cs" />
+    <Compile Include="Assets\Scripts\Ground.cs" />
+    <Compile Include="Assets\Scripts\MainUI.cs" />
+    <Compile Include="Assets\Scripts\MoveUnit.cs" />
+    <Compile Include="Assets\Scripts\RandomController.cs" />
+    <Compile Include="Assets\Scripts\ScoreManager.cs" />
+    <Compile Include="Assets\Scripts\TestScripts\Enemy.cs" />
+    <Compile Include="Assets\Scripts\TestScripts\Humanoid.cs" />
+    <Compile Include="Assets\Scripts\TestScripts\ListTest.cs" />
+    <Compile Include="Assets\Scripts\TestScripts\Orc.cs" />
+    <Compile Include="Assets\Scripts\TestScripts\RandomTest.cs" />
+    <Compile Include="Assets\Scripts\TestScripts\WarBand.cs" />
+    <Compile Include="Assets\Scripts\Tile.cs" />
+    <Compile Include="Assets\Scripts\TouchModel.cs" />
+    <Compile Include="Assets\Scripts\Unit.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Plugins\DOTween\DOTween.XML" />
